@@ -1,0 +1,1951 @@
+{
+	"info": {
+		"_postman_id": "100c0497-b4cb-4b57-8bbd-025b60438ad2",
+		"name": "Trello API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27555990"
+	},
+	"item": [
+		{
+			"name": "Boards",
+			"item": [
+				{
+					"name": "Get all boards",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body is an array\", () => {\r",
+									"    const response = pm.response.json();\r",
+									"    pm.expect(response).to.be.an(\"array\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is application/json\", () => {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contain(\"application/json\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/members/me/boards?key={{apiKey}}&token={{apiToken}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"members",
+								"me",
+								"boards"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{apiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{apiToken}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create board",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"pm.collectionVariables.set(\"boardID\", response.id);\r",
+									"\r",
+									"pm.test(\"Board was created successfully\", () => {\r",
+									"    pm.expect(response.name).to.eql(\"Board \" + pm.collectionVariables.get(\"boardNumber\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body is an object\", () => {\r",
+									"    pm.expect(response).to.be.an(\"object\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is application/json\", () => {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contain(\"application/json\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let boardNumber = pm.collectionVariables.get(\"boardNumber\");\r",
+									"if(isNaN(boardNumber)){\r",
+									"    boardNumber = 0;\r",
+									"}\r",
+									"\r",
+									"boardNumber++;\r",
+									"pm.collectionVariables.set(\"boardNumber\", boardNumber);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/boards/?name=Board {{boardNumber}}&key={{apiKey}}&token={{apiToken}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"boards",
+								""
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Board {{boardNumber}}"
+								},
+								{
+									"key": "key",
+									"value": "{{apiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{apiToken}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get board",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response body is an object\", () => {\r",
+									"    pm.expect(response).to.be.an(\"object\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is application/json\", () => {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contain(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Board is present\", () => {\r",
+									"    pm.expect(response.id).to.eql(pm.collectionVariables.get(\"boardID\"));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/boards/:id?key={{apiKey}}&token={{apiToken}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"boards",
+								":id"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{apiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{apiToken}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{boardID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get board membership",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"  const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response body is an array\", () => {\r",
+									"    pm.expect(response).to.be.an(\"array\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is application/json\", () => {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contain(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"memberType is admin\", () => {\r",
+									"    pm.expect(response[0].memberType).to.eql(\"admin\")\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/boards/:id/memberships?key={{apiKey}}&token={{apiToken}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"boards",
+								":id",
+								"memberships"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{apiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{apiToken}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{boardID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update board",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response body is an object\", () => {\r",
+									"    pm.expect(response).to.be.an(\"object\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is application/json\", () => {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contain(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Board name has changed\", () => {\r",
+									"    pm.expect(response.id).to.eql(pm.collectionVariables.get(\"boardID\"));\r",
+									"    pm.expect(response.name).to.eql(\"Meeting agenda\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/boards/:id/?key={{apiKey}}&token={{apiToken}}&name=Meeting agenda",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"boards",
+								":id",
+								""
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{apiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{apiToken}}"
+								},
+								{
+									"key": "name",
+									"value": "Meeting agenda"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{boardID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Lists",
+			"item": [
+				{
+					"name": "Create list ToDo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response body is an object\", () => {\r",
+									"    pm.expect(response).to.be.an(\"object\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is application/json\", () => {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contain(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"List ToDo was created\", () => {\r",
+									"    pm.expect(response.name).to.eql(\"ToDo\");\r",
+									"    pm.expect(response.idBoard).to.eql(pm.collectionVariables.get(\"boardID\"));\r",
+									"    pm.collectionVariables.set(\"toDoListID\", response.id);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/boards/:id/lists?name=ToDo&key={{apiKey}}&token={{apiToken}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"boards",
+								":id",
+								"lists"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "ToDo"
+								},
+								{
+									"key": "key",
+									"value": "{{apiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{apiToken}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{boardID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create list Done",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response body is an object\", () => {\r",
+									"    pm.expect(response).to.be.an(\"object\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is application/json\", () => {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contain(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"List Done was created\", () => {\r",
+									"    pm.expect(response.name).to.eql(\"Done\");\r",
+									"    pm.expect(response.idBoard).to.eql(pm.collectionVariables.get(\"boardID\"));\r",
+									"    pm.collectionVariables.set(\"doneListID\", response.id);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/boards/:id/lists?name=Done&key={{apiKey}}&token={{apiToken}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"boards",
+								":id",
+								"lists"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Done"
+								},
+								{
+									"key": "key",
+									"value": "{{apiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{apiToken}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{boardID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all lists",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response body is an array\", () => {\r",
+									"    pm.expect(response).to.be.an(\"array\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is application/json\", () => {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contain(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"ToDoList is on board\", () => {\r",
+									"    let listName = response.find(board => board.id === pm.collectionVariables.get(\"toDoListID\"));\r",
+									"    console.log(listName);\r",
+									"    pm.expect(listName.name).to.include(\"ToDo\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/boards/:id/lists?key={{apiKey}}&token={{apiToken}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"boards",
+								":id",
+								"lists"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{apiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{apiToken}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{boardID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get ToDo list",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response body is an object\", () => {\r",
+									"    pm.expect(response).to.be.an(\"object\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is application/json\", () => {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contain(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"List is present\", () => {\r",
+									"    pm.expect(response.id).to.eql(pm.collectionVariables.get(\"toDoListID\"));\r",
+									"    pm.expect(response.idBoard).to.eql(pm.collectionVariables.get(\"boardID\"));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lists/:id?key={{apiKey}}&token={{apiToken}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lists",
+								":id"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{apiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{apiToken}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{toDoListID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update ToDo list",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response body is an object\", () => {\r",
+									"    pm.expect(response).to.be.an(\"object\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is application/json\", () => {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contain(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Position was changed\", () => {\r",
+									"    pm.expect(response.id).to.eql(pm.collectionVariables.get(\"toDoListID\"));\r",
+									"    pm.expect(response.idBoard).to.eql(pm.collectionVariables.get(\"boardID\"));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lists/:id?key={{apiKey}}&token={{apiToken}}&pos=top",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lists",
+								":id"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{apiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{apiToken}}"
+								},
+								{
+									"key": "pos",
+									"value": "top"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{toDoListID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Archive list",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response body is an object\", () => {\r",
+									"    pm.expect(response).to.be.an(\"object\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is application/json\", () => {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contain(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"List was archieved\", () => {\r",
+									"    pm.expect(response.id).to.eql(pm.collectionVariables.get(\"toDoListID\"));\r",
+									"    pm.expect(response.idBoard).to.eql(pm.collectionVariables.get(\"boardID\"));\r",
+									"    pm.expect(response.closed).to.be.true;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lists/:id/closed?key={{apiKey}}&token={{apiToken}}&value=true",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lists",
+								":id",
+								"closed"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{apiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{apiToken}}"
+								},
+								{
+									"key": "value",
+									"value": "true"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{toDoListID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unarchive list",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response body is an object\", () => {\r",
+									"    pm.expect(response).to.be.an(\"object\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is application/json\", () => {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contain(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"List was unarchieved\", () => {\r",
+									"    pm.expect(response.id).to.eql(pm.collectionVariables.get(\"toDoListID\"));\r",
+									"    pm.expect(response.idBoard).to.eql(pm.collectionVariables.get(\"boardID\"));\r",
+									"    pm.expect(response.closed).to.be.false;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lists/:id/closed?key={{apiKey}}&token={{apiToken}}&value=false",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lists",
+								":id",
+								"closed"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{apiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{apiToken}}"
+								},
+								{
+									"key": "value",
+									"value": "false"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{toDoListID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cards",
+			"item": [
+				{
+					"name": "Create card",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response body is an object\", () => {\r",
+									"    pm.expect(response).to.be.an(\"object\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is application/json\", () => {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contain(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Card was created\", () => {\r",
+									"    pm.expect(response.idList).to.eql(pm.collectionVariables.get(\"toDoListID\"));\r",
+									"    pm.expect(response.idBoard).to.eql(pm.collectionVariables.get(\"boardID\"));\r",
+									"    pm.collectionVariables.set(\"cardID\", response.id);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let taskNumber = pm.collectionVariables.get(\"taskNumber\");\r",
+									"if(isNaN(taskNumber)){\r",
+									"    taskNumber = 0;\r",
+									"}\r",
+									"\r",
+									"taskNumber++;\r",
+									"pm.collectionVariables.set(\"taskNumber\", taskNumber);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/cards?idList={{toDoListID}}&name={{taskNumber}}st task&key={{apiKey}}&token={{apiToken}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"cards"
+							],
+							"query": [
+								{
+									"key": "idList",
+									"value": "{{toDoListID}}"
+								},
+								{
+									"key": "name",
+									"value": "{{taskNumber}}st task"
+								},
+								{
+									"key": "key",
+									"value": "{{apiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{apiToken}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get card",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response body is an object\", () => {\r",
+									"    pm.expect(response).to.be.an(\"object\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is application/json\", () => {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contain(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Card was retrieved\", () => {\r",
+									"    pm.expect(response.id).to.eql(pm.collectionVariables.get(\"cardID\"));\r",
+									"    pm.expect(response.idList).to.eql(pm.collectionVariables.get(\"toDoListID\"));\r",
+									"    pm.expect(response.idBoard).to.eql(pm.collectionVariables.get(\"boardID\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/boards/:id/cards/:idCard?key={{apiKey}}&token={{apiToken}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"boards",
+								":id",
+								"cards",
+								":idCard"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "ToDo",
+									"disabled": true
+								},
+								{
+									"key": "key",
+									"value": "{{apiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{apiToken}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{boardID}}"
+								},
+								{
+									"key": "idCard",
+									"value": "{{cardID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all cards",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response body is an array\", () => {\r",
+									"    pm.expect(response).to.be.an(\"array\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is application/json\", () => {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contain(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"List is not empty\", () => {\r",
+									"    let newCard;\r",
+									"    for(let card of response){\r",
+									"        if(card.id === pm.collectionVariables.get(\"cardID\")){\r",
+									"            newCard = card;\r",
+									"        }\r",
+									"    }\r",
+									"    pm.expect(newCard.id).to.eql(pm.collectionVariables.get(\"cardID\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/boards/:id/cards?key={{apiKey}}&token={{apiToken}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"boards",
+								":id",
+								"cards"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{apiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{apiToken}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{boardID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Move all cards",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response body is an array\", () => {\r",
+									"    pm.expect(response).to.be.an(\"array\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is application/json\", () => {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contain(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Cards were moved\", () => {\r",
+									"    pm.expect(response[0].idList).to.eql(pm.collectionVariables.get(\"doneListID\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lists/:id/moveAllCards?key={{apiKey}}&token={{apiToken}}&idBoard={{boardID}}&idList={{doneListID}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lists",
+								":id",
+								"moveAllCards"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{apiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{apiToken}}"
+								},
+								{
+									"key": "idBoard",
+									"value": "{{boardID}}"
+								},
+								{
+									"key": "idList",
+									"value": "{{doneListID}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{toDoListID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update card",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response body is an object\", () => {\r",
+									"    pm.expect(response).to.be.an(\"object\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is application/json\", () => {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contain(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Card name was changed\", () => {\r",
+									"    pm.expect(response.idList).to.eql(pm.collectionVariables.get(\"doneListID\"));\r",
+									"    pm.expect(response.idBoard).to.eql(pm.collectionVariables.get(\"boardID\"));\r",
+									"    pm.expect(response.id).to.eql(pm.collectionVariables.get(\"cardID\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/cards/:id?key={{apiKey}}&token={{apiToken}}&name=New task",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"cards",
+								":id"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{apiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{apiToken}}"
+								},
+								{
+									"key": "name",
+									"value": "New task"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{cardID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add comment to card",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response body is an object\", () => {\r",
+									"    pm.expect(response).to.be.an(\"object\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is application/json\", () => {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contain(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Comment was added\", () => {\r",
+									"    pm.expect(response.data.card.id).to.eql(pm.collectionVariables.get(\"cardID\"));\r",
+									"    pm.expect(response.data.board.id).to.eql(pm.collectionVariables.get(\"boardID\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/cards/:id/actions/comments?key={{apiKey}}&token={{apiToken}}&text=This is my comment",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"cards",
+								":id",
+								"actions",
+								"comments"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{apiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{apiToken}}"
+								},
+								{
+									"key": "text",
+									"value": "This is my comment"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{cardID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Checklist",
+			"item": [
+				{
+					"name": "Create checklist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response body is an object\", () => {\r",
+									"    pm.expect(response).to.be.an(\"object\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is application/json\", () => {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contain(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Checklist was created\", () => {\r",
+									"    pm.expect(response.idCard).to.eql(pm.collectionVariables.get(\"cardID\"));\r",
+									"    pm.expect(response.idBoard).to.eql(pm.collectionVariables.get(\"boardID\"));\r",
+									"    pm.collectionVariables.set(\"checklistID\", response.id);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/cards/:id/checklists?key={{apiKey}}&token={{apiToken}}&name=Checklist",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"cards",
+								":id",
+								"checklists"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{apiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{apiToken}}"
+								},
+								{
+									"key": "name",
+									"value": "Checklist"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{cardID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get checklist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response body is an array\", () => {\r",
+									"    pm.expect(response).to.be.an(\"array\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is application/json\", () => {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contain(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Checklist was retrieved\", () => {\r",
+									"    let newChecklist;\r",
+									"    for(let checklist of response){\r",
+									"        if(checklist.id === pm.collectionVariables.get(\"checklistID\")){\r",
+									"            newChecklist = checklist;\r",
+									"        }\r",
+									"    }\r",
+									"    pm.expect(newChecklist.id).to.eql(pm.collectionVariables.get(\"checklistID\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/cards/:id/checklists?key={{apiKey}}&token={{apiToken}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"cards",
+								":id",
+								"checklists"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{apiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{apiToken}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{cardID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update checklist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response body is an object\", () => {\r",
+									"    pm.expect(response).to.be.an(\"object\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is application/json\", () => {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contain(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Checklist title was changed\", () => {\r",
+									"    pm.expect(response.name).to.eql(\"Updates\");\r",
+									"    pm.expect(response.id).to.eql(pm.collectionVariables.get(\"checklistID\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/checklists/:id/:field?key={{apiKey}}&token={{apiToken}}&value=Updates",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"checklists",
+								":id",
+								":field"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{apiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{apiToken}}"
+								},
+								{
+									"key": "value",
+									"value": "Updates"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{checklistID}}"
+								},
+								{
+									"key": "field",
+									"value": "name"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Checkitems",
+			"item": [
+				{
+					"name": "Create checkitem",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response body is an object\", () => {\r",
+									"    pm.expect(response).to.be.an(\"object\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is application/json\", () => {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contain(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Checkitem was created\", () => {\r",
+									"    pm.expect(response.idChecklist).to.eql(pm.collectionVariables.get(\"checklistID\"));\r",
+									"    pm.collectionVariables.set(\"checkitemID\", response.id);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/checklists/:id/checkItems?key={{apiKey}}&token={{apiToken}}&name=First checkitem",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"checklists",
+								":id",
+								"checkItems"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{apiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{apiToken}}"
+								},
+								{
+									"key": "name",
+									"value": "First checkitem"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{checklistID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update checkitem",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response body is an object\", () => {\r",
+									"    pm.expect(response).to.be.an(\"object\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is application/json\", () => {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contain(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Checkitem status was changed\", () => {\r",
+									"    pm.expect(response.id).to.eql(pm.collectionVariables.get(\"checkitemID\"));\r",
+									"    pm.expect(response.state).to.eql(\"complete\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/cards/:id/checkItem/:idCheckItem?key={{apiKey}}&token={{apiToken}}&state=complete",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"cards",
+								":id",
+								"checkItem",
+								":idCheckItem"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{apiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{apiToken}}"
+								},
+								{
+									"key": "state",
+									"value": "complete"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{cardID}}"
+								},
+								{
+									"key": "idCheckItem",
+									"value": "{{checkitemID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete checkitem",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/checklists/:id/checkItems/:idCheckItem?key={{apiKey}}&token={{apiToken}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"checklists",
+								":id",
+								"checkItems",
+								":idCheckItem"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{apiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{apiToken}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{checklistID}}"
+								},
+								{
+									"key": "idCheckItem",
+									"value": "{{checkitemID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete checklist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/checklists/:id?key={{apiKey}}&token={{apiToken}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"checklists",
+								":id"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{apiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{apiToken}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{checklistID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete card",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/cards/:id?key={{apiKey}}&token={{apiToken}}&state=complete",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"cards",
+								":id"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{apiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{apiToken}}"
+								},
+								{
+									"key": "state",
+									"value": "complete"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{cardID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete board",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/boards/:id/?key={{apiKey}}&token={{apiToken}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"boards",
+								":id",
+								""
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{apiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{apiToken}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{boardID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "apiKey",
+			"value": "api_key"
+		},
+		{
+			"key": "apiToken",
+			"value": "api_token"
+		},
+		{
+			"key": "baseURL",
+			"value": "https://api.trello.com/1"
+		},
+		{
+			"key": "boardID",
+			"value": "652ebed95498340525953140"
+		},
+		{
+			"key": "boardNumber",
+			"value": "1"
+		},
+		{
+			"key": "toDoListID",
+			"value": "652f9a0ac2d52d249f1f407a"
+		},
+		{
+			"key": "doneListID",
+			"value": "652f9a0dcd232f39895a2d13"
+		},
+		{
+			"key": "cardID",
+			"value": "652f991fcae469c535b90720"
+		},
+		{
+			"key": "taskNumber",
+			"value": "1"
+		},
+		{
+			"key": "checklistID",
+			"value": "652f9921d37fc0fa60c5378c"
+		},
+		{
+			"key": "checkitemID",
+			"value": "652f992309f6b2e380e7dde2"
+		}
+	]
+}
